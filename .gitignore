@@ -1,0 +1,71 @@
+# Build results
+bin/
+obj/
+out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+!packages/repositories.config
+
+# Test Results
+TestResults/
+*.trx
+coverage*.xml
+coverage*.json
+
+# Publish output
+publish/
+
+# MSIX packages
+*.msix
+*.msixbundle
+*.appx
+*.appxbundle
+*.appxupload
+AppPackages/
+
+# Generated files
+Generated Files/
+*.g.cs
+*.g.i.cs
+
+# Logs
+*.log
+logs/
+
+# Backup files
+*~
+*.bak
+*.swp
+
+# Local environment
+.env
+.env.local
+
+# JetBrains Rider
+*.sln.iml
