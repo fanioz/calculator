@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Page
+    x:Class="calculator.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:calculator.ViewModels"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <!-- Right-click context menu -->
+    <Page.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem Text="Copy" 
+                            Command="{x:Bind ViewModel.CopyResultCommand}"
+                            Icon="Copy"
+                            AutomationProperties.Name="Copy result to clipboard">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Key="C" Modifiers="Control"/>
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Clear" 
+                            Command="{x:Bind ViewModel.ClearCommand}"
+                            AutomationProperties.Name="Clear calculator"/>
+        </MenuFlyout>
+    </Page.ContextFlyout>
+
+    <!-- Keyboard Accelerators -->
+    <Page.KeyboardAccelerators>
+        <!-- Digits -->
+        <KeyboardAccelerator Key="Number0" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number1" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number2" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number3" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number4" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number5" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number6" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number7" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number8" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Number9" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad0" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad1" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad2" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad3" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad4" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad5" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad6" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad7" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad8" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="NumberPad9" Invoked="OnDigitAccelerator" />
+        <KeyboardAccelerator Key="Decimal" Invoked="OnDecimalAccelerator" />
+        
+        <!-- Operations -->
+        <KeyboardAccelerator Key="Add" Invoked="OnOperatorAccelerator" />
+        <KeyboardAccelerator Key="Subtract" Invoked="OnOperatorAccelerator" />
+        <KeyboardAccelerator Key="Multiply" Invoked="OnOperatorAccelerator" />
+        <KeyboardAccelerator Key="Divide" Invoked="OnOperatorAccelerator" />
+        
+        <!-- Equals -->
+        <KeyboardAccelerator Key="Enter" Invoked="OnEqualsAccelerator" />
+        
+        <!-- Backspace -->
+        <KeyboardAccelerator Key="Back" Invoked="OnBackspaceAccelerator" />
+        
+        <!-- Clear -->
+        <KeyboardAccelerator Key="Escape" Invoked="OnClearAccelerator" />
+        <KeyboardAccelerator Key="Delete" Invoked="OnClearEntryAccelerator" />
+    </Page.KeyboardAccelerators>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <!-- ============================================== -->
+        <!-- Row 0: CommandBar                              -->
+        <!-- ============================================== -->
+        <CommandBar Grid.Row="0" 
+                    DefaultLabelPosition="Collapsed"
+                    Background="Transparent"
+                    IsOpen="False">
+            <AppBarButton x:Name="BackspaceButton"
+                          Icon="Back" 
+                          Label="Backspace"
+                          Command="{x:Bind ViewModel.BackspaceCommand}"
+                          AutomationProperties.Name="Backspace, delete last digit"
+                          ToolTipService.ToolTip="Backspace"/>
+            
+            <AppBarButton x:Name="ClearEntryButton"
+                          Label="CE"
+                          Command="{x:Bind ViewModel.ClearEntryCommand}"
+                          AutomationProperties.Name="Clear entry"
+                          ToolTipService.ToolTip="Clear Entry (CE)">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE894;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            
+            <AppBarButton x:Name="ClearButton"
+                          Label="C"
+                          Command="{x:Bind ViewModel.ClearCommand}"
+                          AutomationProperties.Name="Clear all"
+                          ToolTipService.ToolTip="Clear All (C)">
+                <AppBarButton.Icon>
+                    <FontIcon Glyph="&#xE711;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="Square root (√)" 
+                              Command="{x:Bind ViewModel.AdvancedCommand}"
+                              CommandParameter="sqrt"
+                              AutomationProperties.Name="Square root">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xF7C2;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Square (x²)" 
+                              Command="{x:Bind ViewModel.AdvancedCommand}"
+                              CommandParameter="square"
+                              AutomationProperties.Name="Square">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xF7C1;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="Reciprocal (1/x)" 
+                              Command="{x:Bind ViewModel.AdvancedCommand}"
+                              CommandParameter="reciprocal"
+                              AutomationProperties.Name="Reciprocal, one divided by x">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE94A;"/>
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+
+        <!-- ============================================== -->
+        <!-- Row 1: Display Panel                           -->
+        <!-- ============================================== -->
+        <StackPanel Grid.Row="1" 
+                    Padding="20,12,20,16"
+                    Background="{ThemeResource LayerFillColorDefaultBrush}">
+            
+            <!-- Expression History -->
+            <TextBlock x:Name="ExpressionDisplay"
+                       Text="{x:Bind ViewModel.ExpressionHistory, Mode=OneWay}"
+                       Style="{StaticResource ExpressionHistoryStyle}"
+                       AutomationProperties.Name="Expression history"
+                       AutomationProperties.LiveSetting="Polite"
+                       MinHeight="22"/>
+            
+            <!-- Main Display Value -->
+            <TextBlock x:Name="DisplayValue"
+                       Text="{x:Bind ViewModel.DisplayValue, Mode=OneWay}"
+                       Style="{StaticResource DisplayValueStyle}"
+                       AutomationProperties.Name="Calculator display"
+                       AutomationProperties.LiveSetting="Polite"/>
+        </StackPanel>
+
+        <!-- ============================================== -->
+        <!-- Row 2: Calculator Buttons Grid                 -->
+        <!-- ============================================== -->
+        <Grid Grid.Row="2" 
+              Padding="8,4,8,8"
+              RowDefinitions="*,*,*,*,*,*"
+              ColumnDefinitions="*,*,*,*">
+
+            <!-- Row 0: %, √, x², 1/x -->
+            <Button Content="%" 
+                    Grid.Row="0" Grid.Column="0"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.PercentCommand}"
+                    AutomationProperties.Name="Percent"/>
+            <Button Content="√" 
+                    Grid.Row="0" Grid.Column="1"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.AdvancedCommand}"
+                    CommandParameter="sqrt"
+                    AutomationProperties.Name="Square root"/>
+            <Button Content="x²" 
+                    Grid.Row="0" Grid.Column="2"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.AdvancedCommand}"
+                    CommandParameter="square"
+                    AutomationProperties.Name="Square"/>
+            <Button Content="¹/ₓ" 
+                    Grid.Row="0" Grid.Column="3"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.AdvancedCommand}"
+                    CommandParameter="reciprocal"
+                    AutomationProperties.Name="Reciprocal"/>
+
+            <!-- Row 1: CE, C, ⌫, ÷ -->
+            <Button Content="CE" 
+                    Grid.Row="1" Grid.Column="0"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.ClearEntryCommand}"
+                    AutomationProperties.Name="Clear entry"/>
+            <Button Content="C" 
+                    Grid.Row="1" Grid.Column="1"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.ClearCommand}"
+                    AutomationProperties.Name="Clear all"/>
+            <Button Grid.Row="1" Grid.Column="2"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.BackspaceCommand}"
+                    AutomationProperties.Name="Backspace">
+                <FontIcon Glyph="&#xE750;" FontSize="18"/>
+            </Button>
+            <Button Content="÷" 
+                    Grid.Row="1" Grid.Column="3"
+                    Style="{StaticResource OperatorButtonStyle}"
+                    Command="{x:Bind ViewModel.OperationCommand}"
+                    CommandParameter="÷"
+                    AutomationProperties.Name="Divide"/>
+
+            <!-- Row 2: 7, 8, 9, × -->
+            <Button Content="7" 
+                    Grid.Row="2" Grid.Column="0"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="7"
+                    AutomationProperties.Name="Seven"/>
+            <Button Content="8" 
+                    Grid.Row="2" Grid.Column="1"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="8"
+                    AutomationProperties.Name="Eight"/>
+            <Button Content="9" 
+                    Grid.Row="2" Grid.Column="2"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="9"
+                    AutomationProperties.Name="Nine"/>
+            <Button Content="×" 
+                    Grid.Row="2" Grid.Column="3"
+                    Style="{StaticResource OperatorButtonStyle}"
+                    Command="{x:Bind ViewModel.OperationCommand}"
+                    CommandParameter="×"
+                    AutomationProperties.Name="Multiply"/>
+
+            <!-- Row 3: 4, 5, 6, − -->
+            <Button Content="4" 
+                    Grid.Row="3" Grid.Column="0"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="4"
+                    AutomationProperties.Name="Four"/>
+            <Button Content="5" 
+                    Grid.Row="3" Grid.Column="1"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="5"
+                    AutomationProperties.Name="Five"/>
+            <Button Content="6" 
+                    Grid.Row="3" Grid.Column="2"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="6"
+                    AutomationProperties.Name="Six"/>
+            <Button Content="−" 
+                    Grid.Row="3" Grid.Column="3"
+                    Style="{StaticResource OperatorButtonStyle}"
+                    Command="{x:Bind ViewModel.OperationCommand}"
+                    CommandParameter="−"
+                    AutomationProperties.Name="Subtract"/>
+
+            <!-- Row 4: 1, 2, 3, + -->
+            <Button Content="1" 
+                    Grid.Row="4" Grid.Column="0"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="1"
+                    AutomationProperties.Name="One"/>
+            <Button Content="2" 
+                    Grid.Row="4" Grid.Column="1"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="2"
+                    AutomationProperties.Name="Two"/>
+            <Button Content="3" 
+                    Grid.Row="4" Grid.Column="2"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="3"
+                    AutomationProperties.Name="Three"/>
+            <Button Content="+" 
+                    Grid.Row="4" Grid.Column="3"
+                    Style="{StaticResource OperatorButtonStyle}"
+                    Command="{x:Bind ViewModel.OperationCommand}"
+                    CommandParameter="+"
+                    AutomationProperties.Name="Add"/>
+
+            <!-- Row 5: ±, 0, ., = -->
+            <Button Content="±" 
+                    Grid.Row="5" Grid.Column="0"
+                    Style="{StaticResource FunctionButtonStyle}"
+                    Command="{x:Bind ViewModel.NegateCommand}"
+                    AutomationProperties.Name="Negate, plus minus"/>
+            <Button Content="0" 
+                    Grid.Row="5" Grid.Column="1"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="0"
+                    AutomationProperties.Name="Zero"/>
+            <Button Content="." 
+                    Grid.Row="5" Grid.Column="2"
+                    Style="{StaticResource DigitButtonStyle}"
+                    Command="{x:Bind ViewModel.DigitInputCommand}"
+                    CommandParameter="."
+                    AutomationProperties.Name="Decimal point"/>
+            <Button Content="=" 
+                    Grid.Row="5" Grid.Column="3"
+                    Style="{StaticResource EqualsButtonStyle}"
+                    Command="{x:Bind ViewModel.EqualsCommand}"
+                    AutomationProperties.Name="Equals"/>
+
+        </Grid>
+    </Grid>
+</Page>
